@@ -5,74 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stopwatch4Examiners</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            transition: background-color 0.5s ease;
-        }
-        .container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .counter {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        .cadre {
-            border: 1px solid #ccc;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        button {
-            font-size: 18px;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-        }
-        button:focus {
-            outline: none;
-        }
-        input {
-            width: 60px;
-            padding: 5px;
-            margin: 5px;
-            font-size: 16px;
-            text-align: center;
-        }
-        @keyframes flashOrange {
-            0%, 100% { background-color: #f0f0f0; }
-            50% { background-color: orange; }
-        }
-        @keyframes flashRed {
-            0%, 100% { background-color: #f0f0f0; }
-            50% { background-color: red; }
-        }
-        .flashing-orange {
-            animation: flashOrange 1s infinite;
-        }
-        .flashing-red {
-            animation: flashRed 1s infinite;
-        }
-        .config-label {
-            display: block;
-            margin-bottom: 10px;
-        }
-        .sub-config {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 10px 0;
-            background-color: #fafafa;
-        }
-        .sub-config h4 {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
+      body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          margin: 0;
+          transition: background-color 0.5s ease, color 0.5s ease;
+      }
+
+      .container {
+          text-align: center;
+          margin-bottom: 20px;
+      }
+
+      .counter {
+          font-size: 48px;
+          margin-bottom: 20px;
+      }
+
+      .cadre {
+          border: 1px solid;
+          padding: 20px;
+          margin-bottom: 20px;
+      }
+
+      button {
+          font-size: 18px;
+          padding: 10px 20px;
+          margin: 5px;
+          cursor: pointer;
+      }
+
+      button:focus {
+          outline: none;
+      }
+
+      input {
+          width: 60px;
+          padding: 5px;
+          margin: 5px;
+          font-size: 16px;
+          text-align: center;
+      }
+
+      @keyframes flashOrange {
+          0%, 100% { background-color: inherit; }
+          50% { background-color: orange; }
+      }
+
+      @keyframes flashRed {
+          0%, 100% { background-color: inherit; }
+          50% { background-color: red; }
+      }
+
+      .flashing-orange {
+          animation: flashOrange 1s infinite;
+      }
+
+      .flashing-red {
+          animation: flashRed 1s infinite;
+      }
+
+      .config-label {
+          display: block;
+          margin-bottom: 10px;
+      }
+
+      .sub-config {
+          border: 1px solid;
+          padding: 15px;
+          margin: 10px 0;
+      }
+
+      .sub-config h4 {
+          margin-top: 0;
+          margin-bottom: 10px;
+      }
+
+      /* Thème clair */
+      @media (prefers-color-scheme: light) {
+          body {
+              background-color: #ffffff;
+              color: #000000;
+          }
+          .cadre {
+              border-color: #ccc;
+          }
+          .sub-config {
+              background-color: #fafafa;
+          }
+      }
+
+      /* Thème sombre */
+      @media (prefers-color-scheme: dark) {
+          body {
+              background-color: #121212;
+              color: #ffffff;
+          }
+          .cadre {
+              border-color: #444;
+          }
+          .sub-config {
+              background-color: #1e1e1e;
+          }
+          button:disabled {
+              color: #ffffff;
+              background-color: #444;
+          }
+      }
     </style>
 </head>
 <body>
@@ -83,15 +126,15 @@
                 <div class="counter" id="soutenanceChrono">00:00:00</div>
                 <button id="soutenanceBoutonStart">Start</button>
                 <button id="soutenanceBoutonPause" disabled>Pause</button>
-                <button id="soutenanceBoutonStop">Terminer</button>
+                <button id="soutenanceBoutonQuestions" disabled>Questions</button>
             </div>
         </div>
         <div id="questions" class="cadre">
             <h3>Questions</h3>
             <div id="questionsCompteur" class="container">
                 <div class="counter" id="questionsChrono">00:00:00</div>
-                <button id="questionsBoutonPause">Pause</button>
-                <button id="questionsBoutonTerminer">Terminer</button>
+                <button id="questionsBoutonPause" disabled>Pause</button>
+                <button id="questionsBoutonTerminer"disabled>Terminer</button>
             </div>
         </div>
         <div id="config" class="cadre">
@@ -108,10 +151,10 @@
             <div class="sub-config" id="questionsConfig">
                 <h4>Questions</h4>
                 <label class="config-label">Durée (min) : 
-                <input type="number" id="questionDuree" value="10" min="0">
+                <input type="number" id="questionsDuree" value="10" min="0">
                 </label>
                 <label class="config-label">Marge (min) : 
-                <input type="number" id="questionMargeAutorisee" value="2" min="0">
+                <input type="number" id="questionsMargeAutorisee" value="2" min="0">
                 </label>
             </div>
         </div>
@@ -141,15 +184,66 @@
           }
       }
 
-      function createCounter(counterId, counterDisplayId, startBtnId, pauseBtnId, stopBtnId, orangeThresholdId, redThresholdId, onStopCallback) {
+      function unlockButton(buttonSoutenanceStart, buttonSoutenancePause, buttonSoutenanceQuestions,   buttonQuestionsPause, buttonQuestionsTerminer) {
+          document.getElementById("soutenanceBoutonStart").disabled = ! buttonSoutenanceStart;
+          document.getElementById("soutenanceBoutonPause").disabled = ! buttonSoutenancePause;
+          document.getElementById("soutenanceBoutonQuestions").disabled = ! buttonSoutenanceQuestions;
+          document.getElementById("questionsBoutonPause").disabled = ! buttonQuestionsPause;
+          document.getElementById("questionsBoutonTerminer").disabled = ! buttonQuestionsTerminer;
+      }
+
+      function formatTime(totalSeconds) {
+          const hours = Math.floor(totalSeconds / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+          return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+
+      function updateChrono(displayId, seconds) {
+          document.getElementById(displayId).textContent = formatTime(seconds);
+      }
+
+      function disableFlashing() {
+          document.body.classList.remove("flashing-orange", "flashing-red");
+      }
+
+      function toggleFlashing(counter, alarmId, thresholdId) {
+          const alarmSecond = document.getElementById(alarmId).value * 60;
+          const redAlarmSecond = alarmSecond + document.getElementById(thresholdId).value * 60;
+          disableFlashing();
+
+          if (counter >= redAlarmSecond) {
+              document.body.classList.add("flashing-red");
+          } else if (counter >= alarmSecond) {
+              document.body.classList.add("flashing-orange");
+          }
+        }
+
+      function createCounter(onStopCallback) {
+          let currentChrono = "soutenanceChrono";
+          let currentDuree = "soutenanceDuree";
+          let currentMargeAutorisee = "soutenanceMargeAutorisee";
+
           let timeBegin = 0;
           let timeAlreadyUP = 0;
-          let intervalId;
           let isPaused = false;
           let hasStarted = false;
 
-          function formatTime(hours, minutes, seconds) {
-              return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          function pauseChrono(idBoutonPause)
+          {
+              if( ! isPaused )
+              { // The counter will be stopped
+                const timeEnd = performance.now();
+                timeAlreadyUP = timeAlreadyUP + Math.floor((timeEnd-timeBegin)/1000);
+                isPaused = true;
+                document.getElementById(idBoutonPause).textContent = "Continuer";
+              }
+              else
+              { // The counter will be restarted
+                timeBegin = performance.now();
+                isPaused = false;
+                document.getElementById(idBoutonPause).textContent = "Pause";
+              }
           }
 
           function startCounter() {
@@ -157,156 +251,87 @@
                   if (!isPaused) {
                       const timeEnd = performance.now();
                       const counter = timeAlreadyUP + Math.floor((timeEnd-timeBegin)/1000);
-                      const hours = Math.floor(counter / 3600);
-                      const minutes = Math.floor((counter - hours * 3600) / 60);
-                      const seconds = counter % 60;
 
                       // Affichage formaté
-                      document.getElementById(counterDisplayId).textContent = formatTime(hours, minutes, seconds);
+                      updateChrono(currentChrono, counter);
 
-                      // Récupération des seuils personnalisés
-                      const orangeThreshold = document.getElementById(orangeThresholdId).value * 60;
-                      const redThreshold = orangeThreshold + document.getElementById(redThresholdId).value * 60;
-
-                      // Vérification du seuil orange
-                      if (counter === orangeThreshold) {
-                          document.body.classList.remove("flashing-red");
-                          document.body.classList.add("flashing-orange");
-                      }
-
-                      // Vérification du seuil rouge
-                      if (counter === redThreshold) {
-                          document.body.classList.remove("flashing-orange");
-                          document.body.classList.add("flashing-red");
-                      }
+                      // Gestion des alarmes
+                      toggleFlashing(counter, currentDuree, currentMargeAutorisee);
                   }
               }, 1000);
           }
 
-          document.getElementById(startBtnId).addEventListener('click', () => {
+          document.getElementById("soutenanceBoutonStart").addEventListener('click', () => {
               if (!hasStarted) {
                   hasStarted = true;
                   timeBegin = performance.now();
                   startCounter();
-                  document.getElementById(startBtnId).textContent = "Reinit";
-                  document.getElementById(pauseBtnId).disabled = false; // Activer le bouton Pause après le démarrage
+                  document.getElementById("soutenanceBoutonStart").textContent = "Reinit";
+                  unlockButton(true, true, true,   false, false);
                   requestWakeLock(); // Demander le verrouillage de l'écran
               } else {
-                  // Réinitialiser le chrono
+                  // Réinitialiser les chronos
                   timeBegin = performance.now();
                   timeAlreadyUP = 0;
-                  document.getElementById(counterDisplayId).textContent = "00:00:00";
-                  document.body.classList.remove("flashing-orange");
-                  document.body.classList.remove("flashing-red");
-
-                  // Arrêter et réinitialiser le chrono des questions
-                  if (questionsIntervalId) {
-                      clearInterval(questionsIntervalId);
-                      document.getElementById("questionsChrono").textContent = "00:00:00";
-                      document.body.classList.remove("flashing-orange");
-                      document.body.classList.remove("flashing-red");
-                  }
+                  document.getElementById("soutenanceChrono").textContent = "00:00:00";
+                  document.getElementById("questionsChrono").textContent = "00:00:00";
+                  disableFlashing();
+                  isPaused = false;
+                  unlockButton(true, true, true,   false, false);
 
                   // Réinitialiser le chronomètre et le redémarrer
-                  if (intervalId) clearInterval(intervalId);
                   startCounter();
               }
           });
 
-          document.getElementById(pauseBtnId).addEventListener('click', () => {
-              if( ! isPaused )
-              { // The counter will be stopped
-                const timeEnd = performance.now();
-                timeAlreadyUP = timeAlreadyUP + Math.floor((timeEnd-timeBegin)/1000);
-                isPaused = true;
-                document.getElementById(pauseBtnId).textContent = "Continuer";
-              }
-              else
-              { // The counter will be restarted
-                timeBegin = performance.now();
-                isPaused = false;
-                document.getElementById(pauseBtnId).textContent = "Pause";
-              }
+          document.getElementById("soutenanceBoutonPause").addEventListener('click', () => {
+              pauseChrono("soutenanceBoutonPause");
           });
 
-          document.getElementById(stopBtnId).addEventListener('click', () => {
-              clearInterval(intervalId);
-              document.body.classList.remove("flashing-orange");
-              document.body.classList.remove("flashing-red");
+          document.getElementById("soutenanceBoutonQuestions").addEventListener('click', () => {
+              currentChrono = "questionsChrono";
+              currentDuree = "questionsDuree";
+              currentMargeAutorisee = "questionsMargeAutorisee";
 
-              if (onStopCallback) {
-                  onStopCallback();
-              }
+              unlockButton(false, false, false,   true, true);
+
+              disableFlashing();
+
+              // Démarrer le chronomètre des questions
+              timeBegin = performance.now();
+              timeAlreadyUP = 0;
+              isPaused = false;
+              startCounter();
+
               // Ne pas appeler releaseWakeLock ici
+          });
+
+          // Questions
+
+          document.getElementById("questionsBoutonPause").addEventListener('click', () => {
+              pauseChrono("questionsBoutonPause");
+          });
+
+          document.getElementById("questionsBoutonTerminer").addEventListener('click', () => {
+              currentChrono = "soutenanceChrono";
+              currentDuree = "soutenanceDuree";
+              currentMargeAutorisee = "soutenanceMargeAutorisee";
+              isPaused = true;
+
+              disableFlashing();
+
+              timeBegin = performance.now();
+              timeAlreadyUP = 0;
+              startCounter();
+
+              releaseWakeLock(); // Libérer le verrouillage de l'écran
+              unlockButton(true, false, false,   false, false);
           });
       }
 
       function soutenanceStartCompteur() {
-          createCounter("soutenanceCompteur", "soutenanceChrono", "soutenanceBoutonStart", "soutenanceBoutonPause", "soutenanceBoutonStop", "soutenanceDuree", "soutenanceMargeAutorisee", () => {
-              // Quand on termine la soutenance, on démarre le compteur des questions
-              // Le compteur des questions est déjà visible
-              startQuestionsCounter(); // Démarrer le chronomètre des questions ici
+          createCounter( () => {
           });
-      }
-
-      function startQuestionsCounter() {
-          let timeBegin = performance.now();
-          let timeAlreadyUP = 0;
-          isPausedQuestions = false;    // Initialiser l'état de pause des questions
-
-          questionsIntervalId = setInterval(() => {
-              if (!isPausedQuestions) {
-                  const timeEnd = performance.now();
-                  const counterQuestions=timeAlreadyUP + Math.floor((timeEnd-timeBegin)/1000);
-                  const hours = Math.floor(counterQuestions / 3600);
-                  const minutes = Math.floor((counterQuestions - hours * 3600) / 60);
-                  const seconds = counterQuestions % 60;
-
-                  document.getElementById("questionsChrono").textContent = formatTime(hours, minutes, seconds);
-
-                  const orangeThreshold = document.getElementById("questionDuree").value * 60;
-                  const redThreshold = orangeThreshold + document.getElementById("questionMargeAutorisee").value * 60;
-
-                  if (counterQuestions === orangeThreshold) {
-                      document.body.classList.remove("flashing-red");
-                      document.body.classList.add("flashing-orange");
-                  }
-
-                  if (counterQuestions === redThreshold) {
-                      document.body.classList.remove("flashing-orange");
-                      document.body.classList.add("flashing-red");
-                  }
-              }
-          }, 1000);
-
-          document.getElementById("questionsBoutonPause").addEventListener('click', () => {
-              if( ! isPausedQuestions )
-              { // The counter will be stopped
-                  const timeEnd = performance.now();
-                  timeAlreadyUP = timeAlreadyUP + Math.floor((timeEnd-timeBegin)/1000);
-                  isPausedQuestions = true;
-                  document.getElementById("questionsBoutonPause").textContent = "Continuer";
-              }
-              else
-              { // The counter will be restarted
-                  timeBegin = performance.now();
-                  isPausedQuestions = false;
-                  document.getElementById("questionsBoutonPause").textContent = "Pause";
-              }
-          });
-
-          document.getElementById("questionsBoutonTerminer").addEventListener('click', () => {
-              clearInterval(questionsIntervalId);
-              document.body.classList.remove("flashing-orange");
-              document.body.classList.remove("flashing-red");
-              // Enlever la ligne suivante pour ne pas réinitialiser le chronomètre
-              // document.getElementById("questionsChrono").textContent = "00:00:00";
-              releaseWakeLock(); // Libérer le verrouillage de l'écran
-          });
-      }
-
-      function formatTime(hours, minutes, seconds) {
-          return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       }
 
       // Initialisation du chronomètre de soutenance dès le chargement de la page
