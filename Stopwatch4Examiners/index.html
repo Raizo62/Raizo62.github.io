@@ -169,10 +169,8 @@
           try {
               wakeLock = await navigator.wakeLock.request('screen');
               wakeLock.addEventListener('release', () => {
-                  console.log('Wake Lock was released');
               });
           } catch (err) {
-              console.error(`${err.name}, ${err.message}`);
           }
       }
 
@@ -180,7 +178,6 @@
           if (wakeLock !== null) {
               await wakeLock.release();
               wakeLock = null;
-              console.log('Screen wake lock released');
           }
       }
 
@@ -229,6 +226,8 @@
           let isPaused = false;
           let hasStarted = false;
 
+          unlockButton(true, false, false,   false, false);
+
           function pauseChrono(idBoutonPause)
           {
               if( ! isPaused )
@@ -263,21 +262,28 @@
 
           document.getElementById("soutenanceBoutonStart").addEventListener('click', () => {
               if (!hasStarted) {
+                  // click on the button "Start"
                   hasStarted = true;
+                  isPaused = false;
                   timeBegin = performance.now();
+                  timeAlreadyUP = 0;
                   startCounter();
                   document.getElementById("soutenanceBoutonStart").textContent = "Reinit";
                   unlockButton(true, true, true,   false, false);
                   requestWakeLock(); // Demander le verrouillage de l'écran
               } else {
+                  // click on the button "Reinit"
                   // Réinitialiser les chronos
                   timeBegin = performance.now();
                   timeAlreadyUP = 0;
+                  document.getElementById("soutenanceBoutonStart").textContent = "Start";
+                  document.getElementById("soutenanceBoutonPause").textContent = "Pause";
                   document.getElementById("soutenanceChrono").textContent = "00:00:00";
                   document.getElementById("questionsChrono").textContent = "00:00:00";
                   disableFlashing();
-                  isPaused = false;
-                  unlockButton(true, true, true,   false, false);
+                  isPaused = true;
+                  hasStarted = false;
+                  unlockButton(true, false, false,   false, false);
 
                   // Réinitialiser le chronomètre et le redémarrer
                   startCounter();
@@ -322,7 +328,6 @@
 
               timeBegin = performance.now();
               timeAlreadyUP = 0;
-              startCounter();
 
               releaseWakeLock(); // Libérer le verrouillage de l'écran
               unlockButton(true, false, false,   false, false);
